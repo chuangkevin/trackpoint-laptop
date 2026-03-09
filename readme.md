@@ -20,13 +20,20 @@
 
 #### Fujitsu UH-X
 - **規格**: i5-8250U / 8GB RAM / 256GB SSD
+- **機器資訊**:
+  - 產品編碼: FPC02454LK（台灣版）
+  - Part No.: CP786860-01
+  - 製造日期: 2019-11
+  - 序號: R9Y02813
+  - 日本製造
 - **I/O**:
   - 左側: DC充電, Type-C, Type-C(充電+視訊), HDMI, USB-A
   - 右側: SD卡(標準), RJ45, USB-A
 - **優點**: 主機板小
 - **缺點**: 沒有原生小紅點鍵盤；Type-C直連要搭配 USB-C Dock，或用 PD 誘騙充電頭但仍需佔用一個 USB
-- 充電規格: 群光 A13-065N3A，19V / 3.42A
-- 連結: [賣場](https://tw.bid.yahoo.com/item/101731897638) | [開箱](https://www.mobile01.com/topicdetail.php?f=159&t=6016666) | [User Manual](https://www.fmworld.net/overseas/tw/support/download/uh-x/manuals/B6FK-2911-01ZHZ0.pdf)
+- **充電規格**: 群光 A13-065N3A，19V / 3.42A（DC 19V / 3.42A）
+- **驅動下載**: [Lenovo Support - FMV UH-X](https://pcsupport.lenovo.com/us/en/products/laptops-and-netbooks/fccl/fmv-uh-x/downloads)
+- **連結**: [賣場](https://tw.bid.yahoo.com/item/101731897638) | [開箱](https://www.mobile01.com/topicdetail.php?f=159&t=6016666) | [User Manual](https://www.fmworld.net/overseas/tw/support/download/uh-x/manuals/B6FK-2911-01ZHZ0.pdf)
 
 #### Lenovo L390
 - **規格**: i5-8365U / 16GB RAM / 128GB SSD
