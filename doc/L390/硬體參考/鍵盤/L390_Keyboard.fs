@@ -8,82 +8,94 @@ export const l390Keyboard = defineFeature(function(context is Context, id is Id,
     }
     {
         // ============================================================
-        // ThinkPad L390 Keyboard - actual shape from reference photos
-        // The base plate is NOT a rectangle - bottom has notches,
-        // only center extends down for TrackPoint buttons + mount bar
+        // ThinkPad L390 鍵盤 CAD 模型
+        // 照片量測數據：
+        //   - 總寬 300mm (Photo1 尺確認)
+        //   - 主體高 ~124mm (鍵區111mm + 上邊框9mm + 下邊框4mm)
+        //   - 長寬比 306:124 ≈ 2.47:1
+        //   - 側面厚度 ~4mm (Photo4 卡尺)
+        //   - 輪廓：矩形主體 + 中央底部延伸 + 右側底部延伸
+        //   - 中央延伸 92mm寬 × 15mm深 (TP按鍵+安裝座)
+        //   - 右側延伸 44mm寬 × 13mm深 (方向鍵，與右邊共邊)
         // ============================================================
 
+        // === 基本單位 ===
         var u = 19 * millimeter;
         var cap = 15 * millimeter;
         var hcap = cap / 2;
         var plateThk = 1.5 * millimeter;
         var keyH = 1.6 * millimeter;
 
-        // Function row dimensions
+        // 功能鍵尺寸
         var fw = 14 * millimeter;
         var fh = 12 * millimeter;
         var hfw = fw / 2;
         var hfh = fh / 2;
 
-        // Main body dimensions
+        // === 主體尺寸 ===
         var kbW = 300 * millimeter;
         var fnRowH = 16 * millimeter;
-        var mainRowsH = 5 * u; // rows 1-5
-        var mainH = fnRowH + mainRowsH; // ~111mm
+        var mainRowsH = 5 * u;             // 95mm
+        var mainH = fnRowH + mainRowsH;    // 111mm (鍵區淨高)
 
-        // Bottom extensions - shallow protrusions
-        var btnStripH = 4 * millimeter;
+        // 邊框 (照片觀察)
+        var topMargin = 9 * millimeter;    // Esc 上方
+        var botMargin = 4 * millimeter;    // 底列下方
+        var sideMargin = 3 * millimeter;
+
+        // === 中央延伸 (TP按鍵 + 安裝座) ===
+        var btnStripH = 5 * millimeter;    // TrackPoint 三鍵高度
         var btnGapAbove = 1 * millimeter;
-        var mountBarH = 6 * millimeter;
+        var mountBarH = 8 * millimeter;    // 螺絲安裝條
         var mountGap = 1 * millimeter;
-        var extH = btnGapAbove + btnStripH + mountGap + mountBarH; // ~12mm
+        var centerExtH = btnGapAbove + btnStripH + mountGap + mountBarH; // 15mm
+        var centerExtW = 92 * millimeter;
 
-        // Center extension (TrackPoint buttons + mount bar)
-        var extW = 90 * millimeter;
-        var halfExtW = extW / 2;
+        // === 右側延伸 (方向鍵，與右邊共邊) ===
+        var navExtW = 44 * millimeter;
+        var navExtH = 13 * millimeter;     // 較中央淺
 
-        // Right extension (nav cluster: PgUp/arrows/PgDn)
-        var navExtW = 42 * millimeter;
-
-        // Coordinate system: origin at center of main body
+        // === 座標系: 原點在鍵區中心 ===
         var halfW = kbW / 2;
         var halfH = mainH / 2;
 
         // ==========================================
-        // 1. BASE PLATE - non-rectangular outline
+        // 1. 底板輪廓
         // ==========================================
-        //  +--------------------------------------------+
-        //  |                                            |
-        //  |          [all 6 key rows]                  |
-        //  |                                            |
-        //  +--------+                +---+--------------+
-        //           |  [TP buttons]  |   |  [nav keys]  |
-        //           |  [mount bar]   |   |              |
-        //           +----------------+   +--------------+
-
         var bs = newSketchOnPlane(context, id + "bs", {
                 "sketchPlane" : plane(vector(0, 0, 0) * meter, vector(0, 0, 1))
         });
 
-        var margin = 3 * millimeter;
-        var topY = halfH + margin;
-        var botMain = -halfH;
-        var botExt = botMain - extH;
-        var navInnerX = halfW + margin - navExtW; // inner edge of nav protrusion
+        // 關鍵座標
+        var topY = halfH + topMargin;               // 頂邊
+        var botMain = -halfH - botMargin;            // 主體底邊
+        var botCenter = botMain - centerExtH;        // 中央延伸底 (最深)
+        var botNav = botMain - navExtH;              // 右側延伸底 (較淺)
+        var leftX = -halfW - sideMargin;             // 左邊
+        var rightX = halfW + sideMargin;             // 右邊
+        var navInnerX = rightX - navExtW;            // 右延伸內側 X
+        var halfCenterW = centerExtW / 2;            // 中央延伸半寬
+
+        //  A ────────────────────────────── B
+        //  │         主體矩形               │
+        //  J──I                       F──E  │
+        //     │    中央延伸           │     │
+        //     K───────────────────────L  G──D
+        //                                 (nav)
 
         skPolyline(bs, "outline", {
                 "points" : [
-                    vector(-halfW - margin, topY),              // 1. top-left
-                    vector(halfW + margin, topY),               // 2. top-right
-                    vector(halfW + margin, botExt),             // 3. right edge goes all the way down (nav protrusion)
-                    vector(navInnerX, botExt),                  // 4. nav protrusion bottom-left
-                    vector(navInnerX, botMain),                 // 5. step up to main body bottom
-                    vector(halfExtW, botMain),                  // 6. gap: go left to center extension right edge
-                    vector(halfExtW, botExt),                   // 7. center extension right side down
-                    vector(-halfExtW, botExt),                  // 8. center extension bottom-left
-                    vector(-halfExtW, botMain),                 // 9. center extension left side up
-                    vector(-halfW - margin, botMain),           // 10. main body bottom-left
-                    vector(-halfW - margin, topY)               // 11. close to top-left
+                    vector(leftX, topY),                     // A 左上
+                    vector(rightX, topY),                    // B 右上
+                    vector(rightX, botNav),                  // D 右邊延伸到 nav 底
+                    vector(navInnerX, botNav),               // G nav 左下角
+                    vector(navInnerX, botMain),              // F 回到主體底邊
+                    vector(halfCenterW, botMain),            // E→ 中央延伸右上
+                    vector(halfCenterW, botCenter),          // L 中央延伸右下
+                    vector(-halfCenterW, botCenter),         // K 中央延伸左下
+                    vector(-halfCenterW, botMain),           // I 中央延伸左上
+                    vector(leftX, botMain),                  // J 主體左下
+                    vector(leftX, topY)                      // A 閉合
                 ]
         });
 
@@ -102,7 +114,7 @@ export const l390Keyboard = defineFeature(function(context is Context, id is Id,
         }); }
 
         // ==========================================
-        // 2. KEYCAPS
+        // 2. 鍵帽
         // ==========================================
         var ks = newSketchOnPlane(context, id + "ks", {
                 "sketchPlane" : plane(vector(0, 0, plateThk), vector(0, 0, 1))
@@ -110,11 +122,11 @@ export const l390Keyboard = defineFeature(function(context is Context, id is Id,
         var ki = 0;
         var left = -halfW;
 
-        // --- ROW 0: Function row ---
+        // --- 第 0 列: 功能鍵 (Esc + F1-F12 + Home/End/Ins/Del) ---
         var y0 = halfH - fnRowH / 2;
-        var fkPitch = fw + 2 * millimeter;
-        var groupGap = 6 * millimeter;
-        var x = left + 10 * millimeter + hfw;
+        var fkPitch = fw + 1 * millimeter;   // 15mm
+        var groupGap = 4 * millimeter;
+        var x = left + 8 * millimeter + hfw;
 
         // Esc
         skRectangle(ks, "k" ~ ki, {
@@ -124,11 +136,10 @@ export const l390Keyboard = defineFeature(function(context is Context, id is Id,
         ki += 1;
         x = x + fkPitch + groupGap;
 
-        // F1-F4, gap, F5-F8, gap, F9-F12, gap, Home-End-Ins-Del
-        var fnGroups = [4, 4, 4, 4];
+        // 4 組 × 4 鍵
         for (var g = 0; g < 4; g += 1)
         {
-            for (var i = 0; i < fnGroups[g]; i += 1)
+            for (var i = 0; i < 4; i += 1)
             {
                 skRectangle(ks, "k" ~ ki, {
                         "firstCorner" : vector(x - hfw, y0 - hfh),
@@ -137,13 +148,10 @@ export const l390Keyboard = defineFeature(function(context is Context, id is Id,
                 ki += 1;
                 x = x + fkPitch;
             }
-            if (g < 3)
-            {
-                x = x + groupGap;
-            }
+            if (g < 3) { x = x + groupGap; }
         }
 
-        // --- ROW 1: ` 1-0 - = Backspace ---
+        // --- 第 1 列: ` 1-0 - = Backspace ---
         var y1 = halfH - fnRowH - u / 2;
         x = left + u / 2;
         for (var i = 0; i < 13; i += 1)
@@ -156,15 +164,14 @@ export const l390Keyboard = defineFeature(function(context is Context, id is Id,
             x = x + u;
         }
         var bsW = kbW - 13 * u;
-        var bsCap = bsW - 4 * millimeter;
         x = left + 13 * u + bsW / 2;
         skRectangle(ks, "k" ~ ki, {
-                "firstCorner" : vector(x - bsCap / 2, y1 - hcap),
-                "secondCorner" : vector(x + bsCap / 2, y1 + hcap)
+                "firstCorner" : vector(x - (bsW - 4 * millimeter) / 2, y1 - hcap),
+                "secondCorner" : vector(x + (bsW - 4 * millimeter) / 2, y1 + hcap)
         });
         ki += 1;
 
-        // --- ROW 2: Tab(1.5u) QWERTYUIOP[]\ ---
+        // --- 第 2 列: Tab(1.5u) QWERTYUIOP[]\ ---
         var y2 = y1 - u;
         var tabW = 1.5 * u;
         x = left + tabW / 2;
@@ -191,7 +198,7 @@ export const l390Keyboard = defineFeature(function(context is Context, id is Id,
         });
         ki += 1;
 
-        // --- ROW 3: CapsLock(1.75u) ASDFGHJKL;' Enter ---
+        // --- 第 3 列: CapsLock(1.75u) ASDFGHJKL;' Enter ---
         var y3 = y2 - u;
         var capsW = 1.75 * u;
         x = left + capsW / 2;
@@ -218,7 +225,7 @@ export const l390Keyboard = defineFeature(function(context is Context, id is Id,
         });
         ki += 1;
 
-        // --- ROW 4: LShift(2.25u) ZXCVBNM,./ RShift ---
+        // --- 第 4 列: LShift(2.25u) ZXCVBNM,./ RShift ---
         var y4 = y3 - u;
         var lshW = 2.25 * u;
         x = left + lshW / 2;
@@ -245,18 +252,14 @@ export const l390Keyboard = defineFeature(function(context is Context, id is Id,
         });
         ki += 1;
 
-        // --- ROW 5: Fn Ctrl Win Alt [SPACE] Alt PrtSc Ctrl ---
-        // Then nav cluster on right: PgUp/Up/PgDn (top half), Left/Down/Right (bottom half)
+        // --- 第 5 列: Fn Ctrl Win Alt [Space] Alt PrtSc Ctrl ---
         var y5 = y4 - u;
-
-        // Left keys: Fn(1u) Ctrl(1.25u) Win(1u) Alt(1.25u)
         var r5L = [1.0, 1.25, 1.0, 1.25];
         x = left;
         var leftTotal = 0 * millimeter;
         for (var i = 0; i < 4; i += 1)
         {
             var kw = r5L[i] * u;
-            var kc = kw - 4 * millimeter;
             skRectangle(ks, "k" ~ ki, {
                     "firstCorner" : vector(x + 2 * millimeter, y5 - hcap),
                     "secondCorner" : vector(x + kw - 2 * millimeter, y5 + hcap)
@@ -266,7 +269,6 @@ export const l390Keyboard = defineFeature(function(context is Context, id is Id,
             leftTotal = leftTotal + kw;
         }
 
-        // Right keys: Alt(1.25u) PrtSc(1u) Ctrl(1.25u)
         var r5R = [1.25, 1.0, 1.25];
         var rightModTotal = 0 * millimeter;
         for (var i = 0; i < 3; i += 1)
@@ -274,9 +276,7 @@ export const l390Keyboard = defineFeature(function(context is Context, id is Id,
             rightModTotal = rightModTotal + r5R[i] * u;
         }
 
-        // Spacebar: fills between left mods and right mods (no nav in this row)
-        var rightTotal = rightModTotal;
-        var spaceW = kbW - leftTotal - rightTotal;
+        var spaceW = kbW - leftTotal - rightModTotal;
         skRectangle(ks, "k" ~ ki, {
                 "firstCorner" : vector(x + 2 * millimeter, y5 - hcap),
                 "secondCorner" : vector(x + spaceW - 2 * millimeter, y5 + hcap)
@@ -284,7 +284,6 @@ export const l390Keyboard = defineFeature(function(context is Context, id is Id,
         ki += 1;
         x = x + spaceW;
 
-        // Right modifier keys: Alt PrtSc Ctrl
         for (var i = 0; i < 3; i += 1)
         {
             var kw = r5R[i] * u;
@@ -296,16 +295,15 @@ export const l390Keyboard = defineFeature(function(context is Context, id is Id,
             x = x + kw;
         }
 
-        // Nav cluster: in the RIGHT PROTRUSION below main body
-        // 2 cols x 2 rows of small half-height keys
-        var navPitch = 14 * millimeter; // smaller pitch for nav keys
-        var navKeyW = 11 * millimeter;
-        var navKeyH = 4 * millimeter; // very short keys
+        // --- 方向鍵 (右側延伸區) ---
+        var navPitch = 13 * millimeter;
+        var navKeyW = 10 * millimeter;
+        var navKeyH = 4.5 * millimeter;
         var navCenterX = navInnerX + navExtW / 2;
         var navRow1Y = botMain - 2 * millimeter - navKeyH / 2;
         var navRow2Y = navRow1Y - navKeyH - 1.5 * millimeter;
 
-        // Top row: PgUp, Up, PgDn
+        // 上排: PgUp ↑ PgDn
         for (var i = 0; i < 3; i += 1)
         {
             var nx = navCenterX + (i - 1) * navPitch;
@@ -315,8 +313,7 @@ export const l390Keyboard = defineFeature(function(context is Context, id is Id,
             });
             ki += 1;
         }
-
-        // Bottom row: Left, Down, Right
+        // 下排: ← ↓ →
         for (var i = 0; i < 3; i += 1)
         {
             var nx = navCenterX + (i - 1) * navPitch;
@@ -329,7 +326,6 @@ export const l390Keyboard = defineFeature(function(context is Context, id is Id,
 
         skSolve(ks);
 
-        // Extrude all keycaps
         opExtrude(context, id + "ek", {
                 "entities" : qSketchRegion(id + "ks"),
                 "direction" : vector(0, 0, 1),
@@ -342,12 +338,12 @@ export const l390Keyboard = defineFeature(function(context is Context, id is Id,
         }); }
 
         // ==========================================
-        // 3. TRACKPOINT (between G, H, B keys)
+        // 3. TrackPoint (G/H/B 之間)
         // ==========================================
         var tpX = left + capsW + 5.5 * u;
         var tpY = (y3 + y4) / 2;
 
-        // Square stem 4x4mm
+        // 方形底座
         var ss = newSketchOnPlane(context, id + "ss", {
                 "sketchPlane" : plane(vector(0, 0, 0) * meter, vector(0, 0, 1))
         });
@@ -363,7 +359,7 @@ export const l390Keyboard = defineFeature(function(context is Context, id is Id,
                 "endDepth" : plateThk + keyH
         });
 
-        // Dome cap via loft (7.6mm dia base, tapers to 5mm top, 3mm tall)
+        // 圓頂帽 (loft: 底 ø7.6 → 頂 ø5, 高 3mm)
         var capZ = plateThk + keyH;
         var cbs = newSketchOnPlane(context, id + "cbs", {
                 "sketchPlane" : plane(vector(0, 0, capZ), vector(0, 0, 1))
@@ -385,7 +381,7 @@ export const l390Keyboard = defineFeature(function(context is Context, id is Id,
                 "radius" : 1.0 * millimeter
         }); }
 
-        // TrackPoint hole through plate
+        // TrackPoint 穿孔
         var hs = newSketchOnPlane(context, id + "hs", {
                 "sketchPlane" : plane(vector(0, 0, -0.1 * millimeter), vector(0, 0, 1))
         });
@@ -404,33 +400,31 @@ export const l390Keyboard = defineFeature(function(context is Context, id is Id,
         }); }
 
         // ==========================================
-        // 4. TRACKPOINT 3 BUTTONS (in center extension)
+        // 4. TrackPoint 三鍵 (中央延伸區)
         // ==========================================
         var btnY = botMain - btnGapAbove - btnStripH / 2;
         var btnThk = 0.6 * millimeter;
-
         var bLW = 25 * millimeter;
         var bMW = 15 * millimeter;
         var bRW = 25 * millimeter;
         var bGap = 1.0 * millimeter;
         var bTotal = bLW + bMW + bRW + 2 * bGap;
         var bStart = -bTotal / 2;
-        var bHalfH = btnStripH / 2;
 
         var bks = newSketchOnPlane(context, id + "bks", {
                 "sketchPlane" : plane(vector(0, 0, plateThk), vector(0, 0, 1))
         });
         skRectangle(bks, "bl", {
-                "firstCorner" : vector(bStart, btnY - bHalfH),
-                "secondCorner" : vector(bStart + bLW, btnY + bHalfH)
+                "firstCorner" : vector(bStart, btnY - btnStripH / 2),
+                "secondCorner" : vector(bStart + bLW, btnY + btnStripH / 2)
         });
         skRectangle(bks, "bm", {
-                "firstCorner" : vector(bStart + bLW + bGap, btnY - bHalfH),
-                "secondCorner" : vector(bStart + bLW + bGap + bMW, btnY + bHalfH)
+                "firstCorner" : vector(bStart + bLW + bGap, btnY - btnStripH / 2),
+                "secondCorner" : vector(bStart + bLW + bGap + bMW, btnY + btnStripH / 2)
         });
         skRectangle(bks, "br", {
-                "firstCorner" : vector(bStart + bLW + bGap + bMW + bGap, btnY - bHalfH),
-                "secondCorner" : vector(bStart + bLW + bGap + bMW + bGap + bRW, btnY + bHalfH)
+                "firstCorner" : vector(bStart + bLW + bGap + bMW + bGap, btnY - btnStripH / 2),
+                "secondCorner" : vector(bStart + bLW + bGap + bMW + bGap + bRW, btnY + btnStripH / 2)
         });
         skSolve(bks);
 
@@ -442,15 +436,14 @@ export const l390Keyboard = defineFeature(function(context is Context, id is Id,
         });
 
         // ==========================================
-        // 5. SCREW HOLES in mounting bar area
+        // 5. 螺絲孔 (安裝條)
         // ==========================================
         var mountY = botMain - btnGapAbove - btnStripH - mountGap - mountBarH / 2;
-
         var shs = newSketchOnPlane(context, id + "shs", {
                 "sketchPlane" : plane(vector(0, 0, -0.1 * millimeter), vector(0, 0, 1))
         });
-        skCircle(shs, "sl", { "center" : vector(-47.5 * millimeter, mountY), "radius" : 1.5 * millimeter });
-        skCircle(shs, "sr", { "center" : vector(47.5 * millimeter, mountY), "radius" : 1.5 * millimeter });
+        skCircle(shs, "sl", { "center" : vector(-40 * millimeter, mountY), "radius" : 1.5 * millimeter });
+        skCircle(shs, "sr", { "center" : vector(40 * millimeter, mountY), "radius" : 1.5 * millimeter });
         skSolve(shs);
 
         opExtrude(context, id + "esh", {
@@ -466,7 +459,7 @@ export const l390Keyboard = defineFeature(function(context is Context, id is Id,
         }); }
 
         // ==========================================
-        // 6. UNION ALL
+        // 6. 合併
         // ==========================================
         try { opBoolean(context, id + "ua", {
                 "tools" : qAllModifiableSolidBodies(),
