@@ -1,0 +1,118 @@
+- 目標
+    - 以二手筆電為基礎，改裝一個沒有觸控板，使用小紅點鍵盤為主的長條式螢幕筆電，作為日常使用的輕便筆電
+- 必須
+    - 小紅點鍵盤
+    - 長條螢幕
+    - Type-C 供電
+    
+
+- 主板
+    - Fujitst ux-h
+        - [開箱](https://www.mobile01.com/topicdetail.php?f=159&t=6016666)
+        - [賣場](https://tw.bid.yahoo.com/item/101731897638)
+        - [user manual](https://www.fmworld.net/overseas/tw/support/download/uh-x/manuals/B6FK-2911-01ZHZ0.pdf)
+        - I/O
+            - 左側
+                - DC充電
+                - Type-C
+                - Type-C(充電、視訊輸出)
+                - HDMI
+                - USB-A
+            - 右側
+                - SD卡(標準)
+                - RJ45
+                - USB-A
+        - 規格
+            - i5-8250u
+            - 8GB Ram
+            - 256G SSD
+            - 
+        - 螢幕
+            - 原始型號
+                - [FMVWD2U28](https://www.amazon.co.jp/-/en/FMVWD2U27-FMVWD2U27L-FMVWD2U28-FMVWD2U28L-Compatible/dp/B0DKR66CX8)
+        - 優點
+            - 主機板小
+        - 缺點
+            - 沒有原生小紅點鍵盤
+            - 使用Type-C直連的話，要另外使用USB-C Dock，轉接Type-C充電、視訊輸出
+            - 如果買PD誘騙充電頭，可將DC充電直接變成PD充電，依然要占用一個USB
+        - 部分須知
+            - 充電器原生規格
+                - 變壓器型號是群光A13-065N3A，額定輸入為100-240V AC1.8A～50/60Hz，額定輸出為19V AC 3.42A
+    - Lenovo L390
+        - [賣場](https://tw.bid.yahoo.com/item/101732319070)
+        - 規格
+            - 24GB Ram
+            - i5-8365u
+            - 128G SSD
+        - I/O
+            - 左側
+                - Type-C(充電)
+                - Type-C(視訊輸出)
+                - USB-A
+                - HDMI
+            - 右側
+                - USB-A
+                - SD卡(TF)
+        - 優點
+            - 有小紅點鍵盤
+            - 直接用Type-C螢幕直連
+    - Dell 5370
+        - [賣場](https://tw.bid.yahoo.com/item/101732212043)
+        - [介紹](https://zhuanlan.zhihu.com/p/40400664)
+        - 規格
+            - 12GB Ram
+            - i5-8250u
+            - 128G SSD
+        - I/O
+            - 左側
+                - DC充電
+                - Type-C(充電、視訊輸出)
+                - HDMI
+            - 右側
+                - USB-A
+                - USB-A
+                - SD卡(TF)
+        - 缺點
+            - 螢幕會有閃爍問題
+                - [fix](https://rukitech.net/blog/Inspiron-5370-LCD-repair.html)
+    - Lenovo X390
+        - [賣場](https://tw.bid.yahoo.com/item/101732757557)
+        - 規格
+            - 16GB Ram
+            - 256G SSD
+            - i5-8365u
+        - I/O
+            - 左側
+                - Type-C(充電)
+                - Type-C(Thunderbolt3)
+                - USB-A
+                - HDMI
+            - 右側
+                - USB-A
+            - 後側
+                - SD卡(TF)
+- 螢幕
+    - [12.3吋](https://shopee.tw/product/1655014417/58101886791?d_id=cf369&uls_trackid=550ts69d00r5&utm_content=3gYd7fu2wHrpTx6N5SviHZvzcHew)
+        - 連線方式
+            - Type-C一線通
+            - Type-C供電+HDMI
+        - 尺寸
+            - 307mm*132mm*18mm
+    - [8.8吋](https://e.tb.cn/h.ia69dfAV5jY6UeU?tk=SOYQUKwvwJz)
+            - Micro USB供電+HDMI
+        - 尺寸
+            - 236mm*70mm*18.5mm
+    - [iPad螢幕改裝](https://e.tb.cn/h.iZ7Skfa0YfZKw2k?tk=DpQAUKwACPd)
+            - Type-C一線通
+            - Type-C供電+HDMI
+        - 尺寸
+            - 223mm*175mm*14mm
+- 鍵盤
+    - [x220鍵盤](https://e.tb.cn/h.7AgTmHVRYH8Lidv?tk=1QTDUKDcB2f)
+        - 尺寸
+            - 294.8mm*166.4mm*13mm
+- 外殼
+    - 3D Print
+
+
